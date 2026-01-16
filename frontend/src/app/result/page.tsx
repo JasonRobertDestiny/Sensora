@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -11,46 +11,63 @@ import {
   Radar,
 } from 'recharts'
 
-// Sample formula data (in production, this would come from the API)
-const sampleFormula = {
+// API base URL
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
+// Formula types
+interface Ingredient {
+  name: string
+  concentration: number
+  note_type: string
+  sustainable?: boolean
+}
+
+interface Formula {
+  formula_id: string
+  name: string
+  description: string
+  ingredients: Ingredient[]
+  note_pyramid: { top: number; middle: number; base: number }
+  longevity_score: number
+  projection_score: number
+  sustainability_score: number
+  ifra_compliant: boolean
+  physio_corrections_applied: string[]
+}
+
+// Sample formula data (fallback)
+const sampleFormula: Formula = {
+  formula_id: 'sample-001',
   name: 'Kyoto Morning Rain',
   description:
     'A contemplative blend capturing the essence of dawn in a Japanese garden, where petrichor meets ancient cypress.',
-  topNotes: [
-    { name: 'Yuzu', concentration: 8, sustainable: true },
-    { name: 'Green Tea Accord', concentration: 5, sustainable: true },
-    { name: 'Pink Pepper', concentration: 3, sustainable: false },
+  ingredients: [
+    { name: 'Yuzu', concentration: 8, note_type: 'top', sustainable: true },
+    { name: 'Green Tea Accord', concentration: 5, note_type: 'top', sustainable: true },
+    { name: 'Hinoki Wood', concentration: 15, note_type: 'middle', sustainable: true },
+    { name: 'Iris Pallida', concentration: 12, note_type: 'middle', sustainable: true },
+    { name: 'Vetiver Haiti', concentration: 18, note_type: 'base', sustainable: true },
+    { name: 'White Musk', concentration: 12, note_type: 'base', sustainable: true },
   ],
-  middleNotes: [
-    { name: 'Hinoki Wood', concentration: 15, sustainable: true },
-    { name: 'Iris Pallida', concentration: 12, sustainable: true },
-    { name: 'Shiso Leaf', concentration: 8, sustainable: true },
-  ],
-  baseNotes: [
-    { name: 'Vetiver Haiti', concentration: 18, sustainable: true },
-    { name: 'White Musk', concentration: 12, sustainable: true },
-    { name: 'Ambergris Accord', concentration: 10, sustainable: false },
-  ],
-  metrics: {
-    longevity: 85,
-    projection: 65,
-    uniqueness: 92,
-    sustainability: 78,
-    ifraCompliance: 100,
-  },
+  note_pyramid: { top: 20, middle: 35, base: 45 },
+  longevity_score: 8.5,
+  projection_score: 7.2,
+  sustainability_score: 9.0,
+  ifra_compliant: true,
+  physio_corrections_applied: ['Optimized for normal skin pH'],
 }
 
 // Scent pyramid visualization
 function ScentPyramid({
-  topNotes,
-  middleNotes,
-  baseNotes,
+  ingredients,
 }: {
-  topNotes: typeof sampleFormula.topNotes
-  middleNotes: typeof sampleFormula.middleNotes
-  baseNotes: typeof sampleFormula.baseNotes
+  ingredients: Ingredient[]
 }) {
   const [activeLayer, setActiveLayer] = useState<'top' | 'middle' | 'base' | null>(null)
+
+  const topNotes = ingredients.filter(i => i.note_type === 'top')
+  const middleNotes = ingredients.filter(i => i.note_type === 'middle' || i.note_type === 'heart')
+  const baseNotes = ingredients.filter(i => i.note_type === 'base')
 
   return (
     <div className="relative w-full max-w-md mx-auto">
@@ -167,13 +184,12 @@ function ScentPyramid({
 }
 
 // Metrics radar chart
-function MetricsChart({ metrics }: { metrics: typeof sampleFormula.metrics }) {
+function MetricsChart({ formula }: { formula: Formula }) {
   const data = [
-    { metric: 'Longevity', value: metrics.longevity },
-    { metric: 'Projection', value: metrics.projection },
-    { metric: 'Uniqueness', value: metrics.uniqueness },
-    { metric: 'Sustainability', value: metrics.sustainability },
-    { metric: 'Safety', value: metrics.ifraCompliance },
+    { metric: 'Longevity', value: formula.longevity_score * 10 },
+    { metric: 'Projection', value: formula.projection_score * 10 },
+    { metric: 'Sustainability', value: formula.sustainability_score * 10 },
+    { metric: 'Safety', value: formula.ifra_compliant ? 100 : 50 },
   ]
 
   return (
@@ -204,7 +220,7 @@ function IngredientList({
   ingredients,
   title,
 }: {
-  ingredients: typeof sampleFormula.topNotes
+  ingredients: Ingredient[]
   title: string
 }) {
   return (
@@ -354,17 +370,62 @@ function LoadingAnimation() {
 
 export default function ResultPage() {
   const [isLoading, setIsLoading] = useState(true)
-  const [formula, setFormula] = useState(sampleFormula)
-  const [showExport, setShowExport] = useState(false)
+  const [formula, setFormula] = useState<Formula>(sampleFormula)
+  const [error, setError] = useState<string | null>(null)
+  const [isPurchasing, setIsPurchasing] = useState(false)
+  const [purchaseComplete, setPurchaseComplete] = useState(false)
+
+  // Fetch formula from API
+  const fetchFormula = useCallback(async () => {
+    try {
+      const calibration = localStorage.getItem('aether_calibration')
+      const neuroBrief = localStorage.getItem('aether_neuro_brief')
+
+      if (!calibration || !neuroBrief) {
+        setFormula(sampleFormula)
+        setIsLoading(false)
+        return
+      }
+
+      const calData = JSON.parse(calibration)
+      const neuroData = JSON.parse(neuroBrief)
+
+      const response = await fetch(`${API_BASE}/api/formulation/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profile_id: 'user-' + Date.now(),
+          ph_value: calData.ph || 5.5,
+          skin_type: calData.skinType || 'normal',
+          temperature: calData.temperature || 36.5,
+          prompt: neuroData.prompt || '',
+          valence: neuroData.valence ?? 0.3,
+          arousal: neuroData.arousal ?? 0.2,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to generate formula')
+      }
+
+      const data = await response.json()
+      setFormula(data)
+    } catch (err) {
+      console.error('Error fetching formula:', err)
+      setFormula(sampleFormula)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
-    // Simulate loading
+    // Add delay for loading animation then fetch
     const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 4000)
+      fetchFormula()
+    }, 3000)
 
     return () => clearTimeout(timer)
-  }, [])
+  }, [fetchFormula])
 
   const handleExport = () => {
     const calibration = localStorage.getItem('aether_calibration')
@@ -386,6 +447,49 @@ export default function ResultPage() {
     a.download = `aether-formula-${formula.name.toLowerCase().replace(/\s+/g, '-')}.json`
     a.click()
     URL.revokeObjectURL(url)
+  }
+
+  const handlePurchase = async () => {
+    setIsPurchasing(true)
+    setError(null)
+
+    try {
+      // Create PayPal order
+      const response = await fetch(`${API_BASE}/api/payment/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          formula_id: formula.formula_id,
+          formula_name: formula.name,
+          amount: 149.00,
+          currency: 'USD',
+        }),
+      })
+
+      if (!response.ok) {
+        const errData = await response.json()
+        throw new Error(errData.detail || 'Payment service unavailable')
+      }
+
+      const data = await response.json()
+
+      if (data.approval_url) {
+        // Redirect to PayPal
+        window.location.href = data.approval_url
+      } else {
+        throw new Error('No payment URL received')
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Payment failed')
+      setIsPurchasing(false)
+    }
+  }
+
+  // Helper to get ingredients by note type
+  const getIngredientsByType = (type: string) => {
+    return formula.ingredients.filter(i =>
+      i.note_type === type || (type === 'middle' && i.note_type === 'heart')
+    )
   }
 
   if (isLoading) {
@@ -457,11 +561,7 @@ export default function ResultPage() {
             <h3 className="text-aether-cream font-display text-xl mb-6 text-center">
               Scent Architecture
             </h3>
-            <ScentPyramid
-              topNotes={formula.topNotes}
-              middleNotes={formula.middleNotes}
-              baseNotes={formula.baseNotes}
-            />
+            <ScentPyramid ingredients={formula.ingredients} />
             <p className="text-aether-cream/40 text-xs text-center mt-4">
               Hover over layers to see ingredients
             </p>
@@ -477,21 +577,26 @@ export default function ResultPage() {
             <h3 className="text-aether-cream font-display text-xl mb-6 text-center">
               Performance Metrics
             </h3>
-            <MetricsChart metrics={formula.metrics} />
+            <MetricsChart formula={formula} />
 
             {/* Metric details */}
             <div className="grid grid-cols-2 gap-3 mt-4">
-              {Object.entries(formula.metrics).map(([key, value]) => (
-                <div
-                  key={key}
-                  className="p-2 rounded-lg bg-aether-void/30 text-center"
-                >
-                  <p className="text-aether-gold font-mono text-lg">{value}%</p>
-                  <p className="text-aether-cream/50 text-xs capitalize">
-                    {key.replace(/([A-Z])/g, ' $1').trim()}
-                  </p>
-                </div>
-              ))}
+              <div className="p-2 rounded-lg bg-aether-void/30 text-center">
+                <p className="text-aether-gold font-mono text-lg">{Math.round(formula.longevity_score * 10)}%</p>
+                <p className="text-aether-cream/50 text-xs">Longevity</p>
+              </div>
+              <div className="p-2 rounded-lg bg-aether-void/30 text-center">
+                <p className="text-aether-gold font-mono text-lg">{Math.round(formula.projection_score * 10)}%</p>
+                <p className="text-aether-cream/50 text-xs">Projection</p>
+              </div>
+              <div className="p-2 rounded-lg bg-aether-void/30 text-center">
+                <p className="text-aether-gold font-mono text-lg">{Math.round(formula.sustainability_score * 10)}%</p>
+                <p className="text-aether-cream/50 text-xs">Sustainability</p>
+              </div>
+              <div className="p-2 rounded-lg bg-aether-void/30 text-center">
+                <p className="text-aether-gold font-mono text-lg">{formula.ifra_compliant ? '100' : '50'}%</p>
+                <p className="text-aether-cream/50 text-xs">Safety</p>
+              </div>
             </div>
           </motion.div>
 
@@ -506,22 +611,103 @@ export default function ResultPage() {
               Full Composition
             </h3>
             <div className="max-h-96 overflow-y-auto pr-2">
-              <IngredientList ingredients={formula.topNotes} title="Top Notes" />
-              <IngredientList ingredients={formula.middleNotes} title="Heart Notes" />
-              <IngredientList ingredients={formula.baseNotes} title="Base Notes" />
+              <IngredientList ingredients={getIngredientsByType('top')} title="Top Notes" />
+              <IngredientList ingredients={getIngredientsByType('middle')} title="Heart Notes" />
+              <IngredientList ingredients={getIngredientsByType('base')} title="Base Notes" />
             </div>
           </motion.div>
         </div>
 
-        {/* Actions */}
+        {/* Physio corrections applied */}
+        {formula.physio_corrections_applied.length > 0 && (
+          <motion.div
+            className="mt-8 glass-card p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            <h3 className="text-aether-cream font-display text-lg mb-4">AI Physiological Adjustments</h3>
+            <div className="flex flex-wrap gap-2">
+              {formula.physio_corrections_applied.map((correction, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1 rounded-full bg-aether-purple/20 border border-aether-purple/40 text-aether-cream/80 text-sm"
+                >
+                  {correction}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Purchase section */}
         <motion.div
-          className="mt-12 flex flex-col sm:flex-row gap-4 justify-center"
+          className="mt-12 glass-card p-8 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.9 }}
+        >
+          <h3 className="font-display text-2xl text-aether-cream mb-2">Order Your Custom Fragrance</h3>
+          <p className="text-aether-cream/60 mb-6">
+            30ml Eau de Parfum, hand-crafted with your personalized formula
+          </p>
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <span className="text-aether-gold font-display text-4xl">$149</span>
+            <span className="text-aether-cream/50 text-sm">USD</span>
+          </div>
+
+          {error && (
+            <p className="text-red-400 text-sm mb-4">{error}</p>
+          )}
+
+          {purchaseComplete ? (
+            <div className="text-green-400">
+              <svg className="w-12 h-12 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <p>Purchase complete! Check your email for order details.</p>
+            </div>
+          ) : (
+            <motion.button
+              className="btn-glow text-lg px-8 py-4"
+              onClick={handlePurchase}
+              disabled={isPurchasing}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {isPurchasing ? (
+                <span className="flex items-center gap-2">
+                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Processing...
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797H9.11l-1.272 7.24a.64.64 0 0 1-.633.544H7.076z"/>
+                  </svg>
+                  Pay with PayPal
+                </span>
+              )}
+            </motion.button>
+          )}
+
+          <p className="text-aether-cream/40 text-xs mt-4">
+            Secure payment via PayPal. Ships worldwide in 5-7 business days.
+          </p>
+        </motion.div>
+
+        {/* Actions */}
+        <motion.div
+          className="mt-8 flex flex-col sm:flex-row gap-4 justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
         >
           <motion.button
-            className="btn-glow"
+            className="btn-ghost"
             onClick={handleExport}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -536,25 +722,6 @@ export default function ResultPage() {
                 />
               </svg>
               Export Formula
-            </span>
-          </motion.button>
-
-          <motion.button
-            className="btn-ghost"
-            onClick={() => setShowExport(true)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <span className="flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                />
-              </svg>
-              Share Result
             </span>
           </motion.button>
 
@@ -574,7 +741,7 @@ export default function ResultPage() {
           className="mt-12 flex justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 1.1 }}
         >
           <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/30">
             <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.api.routes import calibration, formulation
+from app.api.routes import calibration, formulation, payment
 
 app = FastAPI(
     title=settings.app_name,
@@ -17,7 +17,11 @@ app = FastAPI(
 # CORS middleware for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://*.vercel.app",  # Vercel deployments
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -26,6 +30,7 @@ app.add_middleware(
 # Include API routes
 app.include_router(calibration.router, prefix=f"{settings.api_prefix}/calibration", tags=["calibration"])
 app.include_router(formulation.router, prefix=f"{settings.api_prefix}/formulation", tags=["formulation"])
+app.include_router(payment.router, prefix=f"{settings.api_prefix}/payment", tags=["payment"])
 
 
 @app.get("/")

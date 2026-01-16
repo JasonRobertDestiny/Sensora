@@ -3,6 +3,7 @@ Application configuration management.
 """
 
 from pathlib import Path
+from typing import Optional
 from pydantic_settings import BaseSettings
 
 
@@ -24,6 +25,16 @@ class Settings(BaseSettings):
 
     # Embedding Model
     embedding_model: str = "all-MiniLM-L6-v2"
+
+    # OpenAI Configuration
+    openai_api_key: Optional[str] = None
+    openai_base_url: str = "https://newapi.deepwisdom.ai/v1"
+    openai_model: str = "gpt-4o"
+
+    # PayPal Configuration
+    paypal_client_id: Optional[str] = None
+    paypal_client_secret: Optional[str] = None
+    paypal_mode: str = "sandbox"  # sandbox or live
 
     # API Settings
     api_prefix: str = "/api"
