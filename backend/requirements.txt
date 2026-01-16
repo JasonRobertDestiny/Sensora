@@ -1,9 +1,10 @@
-# Aether MVP Backend Dependencies
-# Python 3.11+
+# Aether MVP Backend - Vercel Serverless
+# Minimal dependencies for Vercel deployment
+# Heavy deps (rdkit, sentence-transformers) have graceful fallbacks in code
 
 # Web Framework
 fastapi>=0.109.0
-uvicorn[standard]>=0.27.0
+uvicorn>=0.27.0
 python-multipart>=0.0.6
 httpx>=0.26.0
 
@@ -11,30 +12,11 @@ httpx>=0.26.0
 pydantic>=2.5.0
 pydantic-settings>=2.1.0
 
-# Chemistry
-rdkit>=2023.9.4
-
-# Vector Database & RAG
-chromadb>=0.4.22
-langchain>=0.1.0
-langchain-community>=0.0.10
-sentence-transformers>=2.2.2
-
-# EEG Processing
-mne>=1.6.0
-numpy>=1.26.0
-scipy>=1.11.0
-
 # Data Processing
-pandas>=2.1.0
+numpy>=1.26.0
 
-# Testing
-pytest>=7.4.0
-pytest-asyncio>=0.23.0
-httpx>=0.26.0
-
-# OpenAI
+# OpenAI (primary AI engine)
 openai>=1.12.0
 
-# Development
+# Environment
 python-dotenv>=1.0.0
