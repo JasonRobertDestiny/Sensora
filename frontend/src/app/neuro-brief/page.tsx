@@ -202,7 +202,7 @@ export default function NeuroBriefPage() {
 
   useEffect(() => {
     // Check if calibration data exists
-    const calibration = localStorage.getItem('aether_calibration')
+    const calibration = localStorage.getItem('sensora_calibration')
     if (!calibration) {
       router.push('/calibration')
     }
@@ -222,7 +222,7 @@ export default function NeuroBriefPage() {
       arousal,
       timestamp: new Date().toISOString(),
     }
-    localStorage.setItem('aether_neuro_brief', JSON.stringify(neuroBriefData))
+    localStorage.setItem('sensora_neuro_brief', JSON.stringify(neuroBriefData))
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500))

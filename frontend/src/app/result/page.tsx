@@ -378,8 +378,8 @@ export default function ResultPage() {
   // Fetch formula from API
   const fetchFormula = useCallback(async () => {
     try {
-      const calibration = localStorage.getItem('aether_calibration')
-      const neuroBrief = localStorage.getItem('aether_neuro_brief')
+      const calibration = localStorage.getItem('sensora_calibration')
+      const neuroBrief = localStorage.getItem('sensora_neuro_brief')
 
       if (!calibration || !neuroBrief) {
         setFormula(sampleFormula)
@@ -444,7 +444,7 @@ export default function ResultPage() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `aether-formula-${formula.name.toLowerCase().replace(/\s+/g, '-')}.json`
+    a.download = `sensora-formula-${formula.name.toLowerCase().replace(/\s+/g, '-')}.json`
     a.click()
     URL.revokeObjectURL(url)
   }

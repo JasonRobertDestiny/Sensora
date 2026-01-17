@@ -80,7 +80,7 @@ function PerfumeBottle() {
           transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* Aether logo on bottle */}
+        {/* Sensora logo on bottle */}
         <text
           x="100"
           y="195"
@@ -462,7 +462,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-aether-purple/30">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="font-display text-xl text-gold-gradient">AETHER</div>
+          <div className="font-display text-xl text-gold-gradient">SENSORA</div>
           <p className="text-aether-cream/40 text-sm">
             L'Oreal Brandstorm 2026 Innovation Challenge
           </p>

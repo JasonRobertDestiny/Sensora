@@ -144,7 +144,7 @@ export default function CalibrationPage() {
       temperature,
       timestamp: new Date().toISOString(),
     }
-    localStorage.setItem('aether_calibration', JSON.stringify(calibrationData))
+    localStorage.setItem('sensora_calibration', JSON.stringify(calibrationData))
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000))

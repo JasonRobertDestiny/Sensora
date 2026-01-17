@@ -1,5 +1,5 @@
 /**
- * Aether API Client
+ * Sensora API Client
  * Handles all communication with the FastAPI backend
  */
 

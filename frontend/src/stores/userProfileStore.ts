@@ -159,7 +159,7 @@ export const useUserProfileStore = create<UserProfileState>()(
       },
     }),
     {
-      name: 'aether-user-profile',
+      name: 'sensora-user-profile',
       partialize: (state) => ({
         calibration: state.calibration,
         neuroBrief: state.neuroBrief,
