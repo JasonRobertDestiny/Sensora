@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 
-// Animated perfume bottle SVG component
+// Animated perfume bottle SVG component with light teal theme
 function PerfumeBottle() {
   return (
     <motion.div
@@ -15,7 +15,7 @@ function PerfumeBottle() {
       <motion.div
         className="absolute inset-0 blur-3xl"
         style={{
-          background: 'radial-gradient(circle, rgba(201, 169, 98, 0.3) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%)',
         }}
         animate={{ opacity: [0.5, 0.8, 0.5], scale: [1, 1.1, 1] }}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
@@ -25,7 +25,7 @@ function PerfumeBottle() {
       <svg
         viewBox="0 0 200 300"
         className="w-full h-full relative z-10"
-        style={{ filter: 'drop-shadow(0 0 30px rgba(201, 169, 98, 0.3))' }}
+        style={{ filter: 'drop-shadow(0 0 30px rgba(16, 185, 129, 0.2))' }}
       >
         {/* Bottle cap */}
         <motion.rect
@@ -34,7 +34,7 @@ function PerfumeBottle() {
           width="60"
           height="30"
           rx="5"
-          fill="url(#goldGradient)"
+          fill="url(#tealGradient)"
           initial={{ y: -5 }}
           animate={{ y: [10, 8, 10] }}
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
@@ -44,7 +44,7 @@ function PerfumeBottle() {
         <path
           d="M80 40 L80 70 L65 90 L65 90 L135 90 L135 90 L120 70 L120 40 Z"
           fill="url(#glassGradient)"
-          stroke="url(#goldGradient)"
+          stroke="url(#tealGradient)"
           strokeWidth="1"
         />
 
@@ -52,7 +52,7 @@ function PerfumeBottle() {
         <motion.path
           d="M50 90 Q30 120 30 180 Q30 260 100 270 Q170 260 170 180 Q170 120 150 90 Z"
           fill="url(#glassGradient)"
-          stroke="url(#goldGradient)"
+          stroke="url(#tealGradient)"
           strokeWidth="1.5"
           initial={{ opacity: 0.8 }}
           animate={{ opacity: [0.8, 1, 0.8] }}
@@ -86,7 +86,7 @@ function PerfumeBottle() {
           y="195"
           textAnchor="middle"
           className="font-display"
-          fill="url(#goldGradient)"
+          fill="url(#tealGradient)"
           fontSize="16"
           fontWeight="500"
         >
@@ -99,34 +99,34 @@ function PerfumeBottle() {
           y1="210"
           x2="140"
           y2="210"
-          stroke="url(#goldGradient)"
+          stroke="url(#tealGradient)"
           strokeWidth="0.5"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration: 2, delay: 1 }}
         />
 
-        {/* Gradients */}
+        {/* Gradients - Light Teal Theme */}
         <defs>
-          <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#e8d5a3" />
-            <stop offset="50%" stopColor="#c9a962" />
-            <stop offset="100%" stopColor="#8b7340" />
+          <linearGradient id="tealGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#34D399" />
+            <stop offset="50%" stopColor="#10B981" />
+            <stop offset="100%" stopColor="#059669" />
           </linearGradient>
 
           <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(74, 44, 106, 0.6)" />
-            <stop offset="50%" stopColor="rgba(45, 27, 78, 0.4)" />
-            <stop offset="100%" stopColor="rgba(26, 10, 46, 0.6)" />
+            <stop offset="0%" stopColor="rgba(255, 255, 255, 0.9)" />
+            <stop offset="50%" stopColor="rgba(236, 253, 245, 0.7)" />
+            <stop offset="100%" stopColor="rgba(209, 250, 229, 0.8)" />
           </linearGradient>
 
           <linearGradient id="liquidGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(201, 169, 98, 0.4)" />
-            <stop offset="100%" stopColor="rgba(139, 115, 64, 0.6)" />
+            <stop offset="0%" stopColor="rgba(52, 211, 153, 0.5)" />
+            <stop offset="100%" stopColor="rgba(16, 185, 129, 0.7)" />
           </linearGradient>
 
           <radialGradient id="shimmerGradient" cx="30%" cy="30%">
-            <stop offset="0%" stopColor="rgba(232, 213, 163, 0.4)" />
+            <stop offset="0%" stopColor="rgba(167, 243, 208, 0.5)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
         </defs>
@@ -136,7 +136,7 @@ function PerfumeBottle() {
       {[...Array(6)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-2 h-2 rounded-full bg-aether-gold/20"
+          className="absolute w-2 h-2 rounded-full bg-sensora-teal-400/30"
           style={{
             left: `${30 + Math.random() * 40}%`,
             top: `${20 + Math.random() * 30}%`,
@@ -158,7 +158,7 @@ function PerfumeBottle() {
   )
 }
 
-// Feature card component
+// Feature card component with light theme
 function FeatureCard({
   icon,
   title,
@@ -172,18 +172,18 @@ function FeatureCard({
 }) {
   return (
     <motion.div
-      className="glass-card p-6"
+      className="wellness-card p-6"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
-      <div className="w-12 h-12 rounded-xl bg-aether-gold/10 flex items-center justify-center mb-4 text-aether-gold">
+      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sensora-teal-100 to-sensora-teal-50 flex items-center justify-center mb-4 text-sensora-teal-600">
         {icon}
       </div>
-      <h3 className="font-display text-xl text-aether-gold-light mb-2">{title}</h3>
-      <p className="text-aether-cream/60 text-sm leading-relaxed">{description}</p>
+      <h3 className="font-display text-xl text-sensora-text mb-2">{title}</h3>
+      <p className="text-sensora-text-soft text-sm leading-relaxed">{description}</p>
     </motion.div>
   )
 }
@@ -191,28 +191,35 @@ function FeatureCard({
 export default function LandingPage() {
   return (
     <div className="min-h-screen">
+      {/* Decorative background blobs */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="wellness-blob w-96 h-96 bg-sensora-teal-200/30 top-0 right-0" />
+        <div className="wellness-blob w-80 h-80 bg-sensora-gold-200/20 bottom-0 left-0" style={{ animationDelay: '-5s' }} />
+        <div className="wellness-blob w-64 h-64 bg-sensora-rose-200/20 top-1/2 left-1/4" style={{ animationDelay: '-10s' }} />
+      </div>
+
       {/* Navigation */}
       <motion.nav
-        className="fixed top-0 left-0 right-0 z-50 px-6 py-4"
+        className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-white/80 backdrop-blur-md border-b border-sensora-teal-100"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <motion.div
-            className="font-display text-2xl text-gold-gradient"
+            className="font-display text-2xl text-teal-gradient"
             whileHover={{ scale: 1.05 }}
           >
             SENSORA
           </motion.div>
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-aether-cream/70 hover:text-aether-gold transition-colors">
+            <a href="#features" className="text-sensora-text-soft hover:text-sensora-teal-600 transition-colors">
               Features
             </a>
-            <a href="#science" className="text-aether-cream/70 hover:text-aether-gold transition-colors">
+            <a href="#science" className="text-sensora-text-soft hover:text-sensora-teal-600 transition-colors">
               Science
             </a>
-            <a href="#about" className="text-aether-cream/70 hover:text-aether-gold transition-colors">
+            <a href="#about" className="text-sensora-text-soft hover:text-sensora-teal-600 transition-colors">
               About
             </a>
           </div>
@@ -230,7 +237,7 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <motion.p
-              className="text-aether-gold uppercase tracking-[0.3em] text-sm mb-4"
+              className="text-sensora-teal-600 uppercase tracking-[0.3em] text-sm mb-4 font-medium"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -239,18 +246,18 @@ export default function LandingPage() {
             </motion.p>
 
             <motion.h1
-              className="font-display text-5xl md:text-7xl text-aether-cream mb-6 leading-tight"
+              className="font-display text-5xl md:text-7xl text-sensora-text mb-6 leading-tight"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
               Your Essence,{' '}
-              <span className="text-gold-gradient">Algorithmically</span>{' '}
+              <span className="text-teal-gradient">Algorithmically</span>{' '}
               Perfected
             </motion.h1>
 
             <motion.p
-              className="text-lg text-aether-cream/70 mb-8 max-w-lg mx-auto md:mx-0"
+              className="text-lg text-sensora-text-soft mb-8 max-w-lg mx-auto md:mx-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.7 }}
@@ -268,7 +275,7 @@ export default function LandingPage() {
             >
               <Link href="/calibration">
                 <motion.button
-                  className="btn-glow"
+                  className="btn-primary px-8 py-4 text-lg"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -276,7 +283,7 @@ export default function LandingPage() {
                 </motion.button>
               </Link>
               <motion.button
-                className="btn-ghost"
+                className="btn-soft px-8 py-4 text-lg"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -304,12 +311,12 @@ export default function LandingPage() {
           transition={{ delay: 1.5 }}
         >
           <motion.div
-            className="w-6 h-10 rounded-full border-2 border-aether-gold/30 flex justify-center pt-2"
+            className="w-6 h-10 rounded-full border-2 border-sensora-teal-300 flex justify-center pt-2"
             animate={{ y: [0, 5, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
             <motion.div
-              className="w-1 h-2 rounded-full bg-aether-gold"
+              className="w-1 h-2 rounded-full bg-sensora-teal-500"
               animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             />
@@ -327,11 +334,11 @@ export default function LandingPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-aether-gold uppercase tracking-[0.2em] text-sm mb-4">
+            <p className="text-sensora-teal-600 uppercase tracking-[0.2em] text-sm mb-4 font-medium">
               The Process
             </p>
-            <h2 className="font-display text-4xl md:text-5xl text-aether-cream">
-              Precision <span className="text-gold-gradient">Personalization</span>
+            <h2 className="font-display text-4xl md:text-5xl text-sensora-text">
+              Precision <span className="text-teal-gradient">Personalization</span>
             </h2>
           </motion.div>
 
@@ -373,7 +380,7 @@ export default function LandingPage() {
       {/* Science Section */}
       <section id="science" className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="glass-card p-8 md:p-12">
+          <div className="wellness-card p-8 md:p-12">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
@@ -381,20 +388,20 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <p className="text-aether-gold uppercase tracking-[0.2em] text-sm mb-4">
+                <p className="text-sensora-teal-600 uppercase tracking-[0.2em] text-sm mb-4 font-medium">
                   The Science
                 </p>
-                <h2 className="font-display text-3xl md:text-4xl text-aether-cream mb-6">
+                <h2 className="font-display text-3xl md:text-4xl text-sensora-text mb-6">
                   Physio-Chemical{' '}
-                  <span className="text-gold-gradient">Intelligence</span>
+                  <span className="text-teal-gradient">Intelligence</span>
                 </h2>
-                <p className="text-aether-cream/70 mb-6 leading-relaxed">
+                <p className="text-sensora-text-soft mb-6 leading-relaxed">
                   Your skin is not a passive canvas. Its acidity affects Schiff base
                   formation in aldehydes. Its lipid content determines how long
                   molecules anchor before evaporating. Temperature accelerates
                   volatilization curves.
                 </p>
-                <p className="text-aether-cream/70 leading-relaxed">
+                <p className="text-sensora-text-soft leading-relaxed">
                   Sensora's Physio-RAG engine retrieves from a knowledge base of
                   dermatological and chemical rules, dynamically adjusting your
                   formula for your unique biochemistry.
@@ -416,12 +423,12 @@ export default function LandingPage() {
                 ].map((stat, i) => (
                   <div
                     key={i}
-                    className="p-4 rounded-xl bg-aether-void/50 border border-aether-purple/30 text-center"
+                    className="p-4 rounded-2xl bg-gradient-to-br from-sensora-teal-50 to-white border border-sensora-teal-100 text-center"
                   >
-                    <p className="font-display text-2xl text-gold-gradient mb-1">
+                    <p className="font-display text-2xl text-teal-gradient mb-1">
                       {stat.value}
                     </p>
-                    <p className="text-aether-cream/50 text-sm">{stat.label}</p>
+                    <p className="text-sensora-text-muted text-sm">{stat.label}</p>
                   </div>
                 ))}
               </motion.div>
@@ -439,17 +446,17 @@ export default function LandingPage() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="font-display text-4xl md:text-5xl text-aether-cream mb-6">
+          <h2 className="font-display text-4xl md:text-5xl text-sensora-text mb-6">
             Ready to Discover Your{' '}
-            <span className="text-gold-gradient">Signature?</span>
+            <span className="text-teal-gradient">Signature?</span>
           </h2>
-          <p className="text-aether-cream/70 mb-8 max-w-xl mx-auto">
+          <p className="text-sensora-text-soft mb-8 max-w-xl mx-auto">
             The journey to your perfect fragrance begins with understanding your
             unique chemistry. Let Sensora guide you.
           </p>
           <Link href="/calibration">
             <motion.button
-              className="btn-glow text-lg"
+              className="btn-primary px-10 py-4 text-lg"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -460,17 +467,17 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-aether-purple/30">
+      <footer className="py-12 px-6 border-t border-sensora-teal-100 bg-white/50">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="font-display text-xl text-gold-gradient">SENSORA</div>
-          <p className="text-aether-cream/40 text-sm">
+          <div className="font-display text-xl text-teal-gradient">SENSORA</div>
+          <p className="text-sensora-text-muted text-sm">
             L'Oreal Brandstorm 2026 Innovation Challenge
           </p>
           <div className="flex gap-6">
-            <span className="text-aether-cream/40 text-sm hover:text-aether-gold transition-colors cursor-pointer">
+            <span className="text-sensora-text-muted text-sm hover:text-sensora-teal-600 transition-colors cursor-pointer">
               Privacy
             </span>
-            <span className="text-aether-cream/40 text-sm hover:text-aether-gold transition-colors cursor-pointer">
+            <span className="text-sensora-text-muted text-sm hover:text-sensora-teal-600 transition-colors cursor-pointer">
               Terms
             </span>
           </div>

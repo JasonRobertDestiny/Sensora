@@ -57,7 +57,7 @@ const sampleFormula: Formula = {
   physio_corrections_applied: ['Optimized for normal skin pH'],
 }
 
-// Scent pyramid visualization
+// Scent pyramid visualization with light theme
 function ScentPyramid({
   ingredients,
 }: {
@@ -74,9 +74,9 @@ function ScentPyramid({
       <svg viewBox="0 0 300 260" className="w-full h-auto">
         {/* Definitions */}
         <defs>
-          <linearGradient id="pyramidGoldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(232, 213, 163, 0.2)" />
-            <stop offset="100%" stopColor="rgba(139, 115, 64, 0.1)" />
+          <linearGradient id="pyramidTealGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(16, 185, 129, 0.15)" />
+            <stop offset="100%" stopColor="rgba(5, 150, 105, 0.08)" />
           </linearGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur" />
@@ -96,14 +96,14 @@ function ScentPyramid({
         >
           <motion.path
             d="M20 180 L280 180 L240 250 L60 250 Z"
-            fill={activeLayer === 'base' ? 'rgba(201, 169, 98, 0.3)' : 'rgba(45, 27, 78, 0.5)'}
-            stroke="rgba(201, 169, 98, 0.4)"
+            fill={activeLayer === 'base' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(16, 185, 129, 0.12)'}
+            stroke="rgba(16, 185, 129, 0.4)"
             strokeWidth="1"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           />
-          <text x="150" y="222" textAnchor="middle" fill="rgba(201, 169, 98, 0.8)" fontSize="12" className="font-body">
+          <text x="150" y="222" textAnchor="middle" fill="rgba(16, 185, 129, 0.9)" fontSize="12" className="font-body">
             BASE NOTES
           </text>
         </motion.g>
@@ -117,14 +117,14 @@ function ScentPyramid({
         >
           <motion.path
             d="M50 100 L250 100 L280 180 L20 180 Z"
-            fill={activeLayer === 'middle' ? 'rgba(201, 169, 98, 0.3)' : 'rgba(45, 27, 78, 0.4)'}
-            stroke="rgba(201, 169, 98, 0.4)"
+            fill={activeLayer === 'middle' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(16, 185, 129, 0.08)'}
+            stroke="rgba(16, 185, 129, 0.4)"
             strokeWidth="1"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           />
-          <text x="150" y="145" textAnchor="middle" fill="rgba(201, 169, 98, 0.8)" fontSize="12" className="font-body">
+          <text x="150" y="145" textAnchor="middle" fill="rgba(16, 185, 129, 0.9)" fontSize="12" className="font-body">
             HEART NOTES
           </text>
         </motion.g>
@@ -138,14 +138,14 @@ function ScentPyramid({
         >
           <motion.path
             d="M100 30 L200 30 L250 100 L50 100 Z"
-            fill={activeLayer === 'top' ? 'rgba(201, 169, 98, 0.3)' : 'rgba(45, 27, 78, 0.3)'}
-            stroke="rgba(201, 169, 98, 0.4)"
+            fill={activeLayer === 'top' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(16, 185, 129, 0.05)'}
+            stroke="rgba(16, 185, 129, 0.4)"
             strokeWidth="1"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           />
-          <text x="150" y="70" textAnchor="middle" fill="rgba(201, 169, 98, 0.8)" fontSize="12" className="font-body">
+          <text x="150" y="70" textAnchor="middle" fill="rgba(16, 185, 129, 0.9)" fontSize="12" className="font-body">
             TOP NOTES
           </text>
         </motion.g>
@@ -155,12 +155,12 @@ function ScentPyramid({
       <AnimatePresence>
         {activeLayer && (
           <motion.div
-            className="absolute left-full top-1/2 -translate-y-1/2 ml-4 w-48 p-4 glass-card"
+            className="absolute left-full top-1/2 -translate-y-1/2 ml-4 w-48 p-4 wellness-card"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
           >
-            <h4 className="text-aether-gold text-sm font-medium mb-2 capitalize">
+            <h4 className="text-sensora-teal-600 text-sm font-medium mb-2 capitalize">
               {activeLayer} Notes
             </h4>
             <ul className="space-y-1">
@@ -171,8 +171,8 @@ function ScentPyramid({
                 : baseNotes
               ).map((note, i) => (
                 <li key={i} className="flex items-center justify-between text-sm">
-                  <span className="text-aether-cream/80">{note.name}</span>
-                  <span className="text-aether-cream/50">{note.concentration}%</span>
+                  <span className="text-sensora-text">{note.name}</span>
+                  <span className="text-sensora-text-muted">{note.concentration}%</span>
                 </li>
               ))}
             </ul>
@@ -183,7 +183,7 @@ function ScentPyramid({
   )
 }
 
-// Metrics radar chart
+// Metrics radar chart with light theme
 function MetricsChart({ formula }: { formula: Formula }) {
   const data = [
     { metric: 'Longevity', value: formula.longevity_score * 10 },
@@ -196,17 +196,17 @@ function MetricsChart({ formula }: { formula: Formula }) {
     <div className="w-full h-64">
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={data}>
-          <PolarGrid stroke="rgba(201, 169, 98, 0.2)" />
+          <PolarGrid stroke="rgba(16, 185, 129, 0.2)" />
           <PolarAngleAxis
             dataKey="metric"
-            tick={{ fill: 'rgba(245, 240, 232, 0.6)', fontSize: 11 }}
+            tick={{ fill: 'rgb(107, 114, 128)', fontSize: 11 }}
           />
           <Radar
             name="Metrics"
             dataKey="value"
-            stroke="#c9a962"
-            fill="#c9a962"
-            fillOpacity={0.3}
+            stroke="#10B981"
+            fill="#10B981"
+            fillOpacity={0.25}
             strokeWidth={2}
           />
         </RadarChart>
@@ -215,7 +215,7 @@ function MetricsChart({ formula }: { formula: Formula }) {
   )
 }
 
-// Ingredient list
+// Ingredient list with light theme
 function IngredientList({
   ingredients,
   title,
@@ -225,25 +225,25 @@ function IngredientList({
 }) {
   return (
     <div className="mb-6">
-      <h4 className="text-aether-gold text-sm font-medium mb-3">{title}</h4>
+      <h4 className="text-sensora-teal-600 text-sm font-medium mb-3">{title}</h4>
       <div className="space-y-2">
         {ingredients.map((ingredient, i) => (
           <motion.div
             key={i}
-            className="flex items-center justify-between p-3 rounded-lg bg-aether-void/30 border border-aether-purple/20"
+            className="flex items-center justify-between p-3 rounded-xl bg-sensora-gray-50 border border-sensora-teal-100"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.1 }}
           >
             <div className="flex items-center gap-3">
-              <span className="text-aether-cream">{ingredient.name}</span>
+              <span className="text-sensora-text">{ingredient.name}</span>
               {ingredient.sustainable && (
-                <span className="px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-xs">
+                <span className="badge-teal text-xs">
                   Sustainable
                 </span>
               )}
             </div>
-            <span className="text-aether-cream/50 font-mono text-sm">
+            <span className="text-sensora-text-muted font-mono text-sm">
               {ingredient.concentration}%
             </span>
           </motion.div>
@@ -253,7 +253,7 @@ function IngredientList({
   )
 }
 
-// Progress steps
+// Progress steps with light theme
 function ProgressSteps({ currentStep }: { currentStep: number }) {
   const steps = ['Bio-Calibration', 'Scent Brief', 'Your Formula']
 
@@ -280,7 +280,7 @@ function ProgressSteps({ currentStep }: { currentStep: number }) {
           {index < steps.length - 1 && (
             <div
               className={`w-16 md:w-24 h-0.5 mx-2 transition-colors duration-500 ${
-                index < currentStep ? 'bg-aether-gold' : 'bg-aether-purple/50'
+                index < currentStep ? 'bg-sensora-teal-500' : 'bg-sensora-gray-200'
               }`}
             />
           )}
@@ -290,7 +290,7 @@ function ProgressSteps({ currentStep }: { currentStep: number }) {
   )
 }
 
-// Loading animation
+// Loading animation with light theme
 function LoadingAnimation() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6">
@@ -303,7 +303,7 @@ function LoadingAnimation() {
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
-            className="absolute inset-0 rounded-full border border-aether-gold/30"
+            className="absolute inset-0 rounded-full border border-sensora-teal-300"
             style={{
               transform: `rotateX(${60 + i * 20}deg) rotateY(${i * 30}deg)`,
             }}
@@ -320,7 +320,7 @@ function LoadingAnimation() {
 
         {/* Center glow */}
         <motion.div
-          className="absolute inset-8 rounded-full bg-aether-gold/20"
+          className="absolute inset-8 rounded-full bg-sensora-teal-200"
           animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
         />
@@ -332,10 +332,10 @@ function LoadingAnimation() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        <h2 className="font-display text-2xl text-aether-cream mb-2">
+        <h2 className="font-display text-2xl text-sensora-text mb-2">
           Formulating Your Essence
         </h2>
-        <p className="text-aether-cream/60 text-sm">
+        <p className="text-sensora-text-soft text-sm">
           Analyzing bio-data and synthesizing molecules...
         </p>
       </motion.div>
@@ -355,7 +355,7 @@ function LoadingAnimation() {
         ].map((msg, i) => (
           <motion.p
             key={i}
-            className="text-aether-gold/60 text-sm text-center"
+            className="text-sensora-teal-500 text-sm text-center"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: [0, 1, 0.5] }}
             transition={{ delay: 1.5 + i * 0.8, duration: 2 }}
@@ -504,10 +504,10 @@ export default function ResultPage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Link href="/" className="font-display text-xl text-gold-gradient">
+        <Link href="/" className="font-display text-xl text-teal-gradient">
           SENSORA
         </Link>
-        <Link href="/" className="text-aether-cream/50 hover:text-aether-gold transition-colors text-sm">
+        <Link href="/" className="text-sensora-text-soft hover:text-sensora-teal-600 transition-colors text-sm">
           Start Over
         </Link>
       </motion.nav>
@@ -524,7 +524,7 @@ export default function ResultPage() {
           transition={{ delay: 0.2 }}
         >
           <motion.p
-            className="text-aether-gold uppercase tracking-[0.2em] text-sm mb-3"
+            className="text-sensora-teal-600 uppercase tracking-[0.2em] text-sm mb-3 font-medium"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -532,7 +532,7 @@ export default function ResultPage() {
             Your Personalized Formula
           </motion.p>
           <motion.h1
-            className="font-display text-4xl md:text-6xl text-gold-gradient mb-4"
+            className="font-display text-4xl md:text-6xl text-teal-gradient mb-4"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4 }}
@@ -540,7 +540,7 @@ export default function ResultPage() {
             {formula.name}
           </motion.h1>
           <motion.p
-            className="text-aether-cream/70 max-w-2xl mx-auto"
+            className="text-sensora-text-soft max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -553,61 +553,61 @@ export default function ResultPage() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Scent pyramid */}
           <motion.div
-            className="glass-card p-6 lg:col-span-1"
+            className="wellness-card p-6 lg:col-span-1"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <h3 className="text-aether-cream font-display text-xl mb-6 text-center">
+            <h3 className="text-sensora-text font-display text-xl mb-6 text-center">
               Scent Architecture
             </h3>
             <ScentPyramid ingredients={formula.ingredients} />
-            <p className="text-aether-cream/40 text-xs text-center mt-4">
+            <p className="text-sensora-text-muted text-xs text-center mt-4">
               Hover over layers to see ingredients
             </p>
           </motion.div>
 
           {/* Metrics chart */}
           <motion.div
-            className="glass-card p-6 lg:col-span-1"
+            className="wellness-card p-6 lg:col-span-1"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
           >
-            <h3 className="text-aether-cream font-display text-xl mb-6 text-center">
+            <h3 className="text-sensora-text font-display text-xl mb-6 text-center">
               Performance Metrics
             </h3>
             <MetricsChart formula={formula} />
 
             {/* Metric details */}
             <div className="grid grid-cols-2 gap-3 mt-4">
-              <div className="p-2 rounded-lg bg-aether-void/30 text-center">
-                <p className="text-aether-gold font-mono text-lg">{Math.round(formula.longevity_score * 10)}%</p>
-                <p className="text-aether-cream/50 text-xs">Longevity</p>
+              <div className="p-2 rounded-xl bg-sensora-teal-50 border border-sensora-teal-100 text-center">
+                <p className="text-sensora-teal-600 font-mono text-lg">{Math.round(formula.longevity_score * 10)}%</p>
+                <p className="text-sensora-text-muted text-xs">Longevity</p>
               </div>
-              <div className="p-2 rounded-lg bg-aether-void/30 text-center">
-                <p className="text-aether-gold font-mono text-lg">{Math.round(formula.projection_score * 10)}%</p>
-                <p className="text-aether-cream/50 text-xs">Projection</p>
+              <div className="p-2 rounded-xl bg-sensora-teal-50 border border-sensora-teal-100 text-center">
+                <p className="text-sensora-teal-600 font-mono text-lg">{Math.round(formula.projection_score * 10)}%</p>
+                <p className="text-sensora-text-muted text-xs">Projection</p>
               </div>
-              <div className="p-2 rounded-lg bg-aether-void/30 text-center">
-                <p className="text-aether-gold font-mono text-lg">{Math.round(formula.sustainability_score * 10)}%</p>
-                <p className="text-aether-cream/50 text-xs">Sustainability</p>
+              <div className="p-2 rounded-xl bg-sensora-teal-50 border border-sensora-teal-100 text-center">
+                <p className="text-sensora-teal-600 font-mono text-lg">{Math.round(formula.sustainability_score * 10)}%</p>
+                <p className="text-sensora-text-muted text-xs">Sustainability</p>
               </div>
-              <div className="p-2 rounded-lg bg-aether-void/30 text-center">
-                <p className="text-aether-gold font-mono text-lg">{formula.ifra_compliant ? '100' : '50'}%</p>
-                <p className="text-aether-cream/50 text-xs">Safety</p>
+              <div className="p-2 rounded-xl bg-sensora-teal-50 border border-sensora-teal-100 text-center">
+                <p className="text-sensora-teal-600 font-mono text-lg">{formula.ifra_compliant ? '100' : '50'}%</p>
+                <p className="text-sensora-text-muted text-xs">Safety</p>
               </div>
             </div>
           </motion.div>
 
           {/* Ingredients list */}
           <motion.div
-            className="glass-card p-6 lg:col-span-1"
+            className="wellness-card p-6 lg:col-span-1"
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <h3 className="text-aether-cream font-display text-xl mb-6">
+            <h3 className="text-sensora-text font-display text-xl mb-6">
               Full Composition
             </h3>
             <div className="max-h-96 overflow-y-auto pr-2">
@@ -621,17 +621,17 @@ export default function ResultPage() {
         {/* Physio corrections applied */}
         {formula.physio_corrections_applied.length > 0 && (
           <motion.div
-            className="mt-8 glass-card p-6"
+            className="mt-8 wellness-card p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
-            <h3 className="text-aether-cream font-display text-lg mb-4">AI Physiological Adjustments</h3>
+            <h3 className="text-sensora-text font-display text-lg mb-4">AI Physiological Adjustments</h3>
             <div className="flex flex-wrap gap-2">
               {formula.physio_corrections_applied.map((correction, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 rounded-full bg-aether-purple/20 border border-aether-purple/40 text-aether-cream/80 text-sm"
+                  className="px-3 py-1 rounded-full bg-sensora-teal-50 border border-sensora-teal-200 text-sensora-teal-700 text-sm"
                 >
                   {correction}
                 </span>
@@ -642,26 +642,26 @@ export default function ResultPage() {
 
         {/* Purchase section */}
         <motion.div
-          className="mt-12 glass-card p-8 text-center"
+          className="mt-12 wellness-card p-8 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
         >
-          <h3 className="font-display text-2xl text-aether-cream mb-2">Order Your Custom Fragrance</h3>
-          <p className="text-aether-cream/60 mb-6">
+          <h3 className="font-display text-2xl text-sensora-text mb-2">Order Your Custom Fragrance</h3>
+          <p className="text-sensora-text-soft mb-6">
             30ml Eau de Parfum, hand-crafted with your personalized formula
           </p>
           <div className="flex items-center justify-center gap-2 mb-6">
-            <span className="text-aether-gold font-display text-4xl">$149</span>
-            <span className="text-aether-cream/50 text-sm">USD</span>
+            <span className="text-sensora-teal-600 font-display text-4xl">$149</span>
+            <span className="text-sensora-text-muted text-sm">USD</span>
           </div>
 
           {error && (
-            <p className="text-red-400 text-sm mb-4">{error}</p>
+            <p className="text-sensora-rose-500 text-sm mb-4">{error}</p>
           )}
 
           {purchaseComplete ? (
-            <div className="text-green-400">
+            <div className="text-sensora-teal-600">
               <svg className="w-12 h-12 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
@@ -669,7 +669,7 @@ export default function ResultPage() {
             </div>
           ) : (
             <motion.button
-              className="btn-glow text-lg px-8 py-4"
+              className="btn-primary text-lg px-8 py-4"
               onClick={handlePurchase}
               disabled={isPurchasing}
               whileHover={{ scale: 1.02 }}
@@ -694,7 +694,7 @@ export default function ResultPage() {
             </motion.button>
           )}
 
-          <p className="text-aether-cream/40 text-xs mt-4">
+          <p className="text-sensora-text-muted text-xs mt-4">
             Secure payment via PayPal. Ships worldwide in 5-7 business days.
           </p>
         </motion.div>
@@ -707,7 +707,7 @@ export default function ResultPage() {
           transition={{ delay: 1 }}
         >
           <motion.button
-            className="btn-ghost"
+            className="btn-soft"
             onClick={handleExport}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -727,7 +727,7 @@ export default function ResultPage() {
 
           <Link href="/calibration">
             <motion.button
-              className="btn-ghost"
+              className="btn-soft"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -743,8 +743,8 @@ export default function ResultPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.1 }}
         >
-          <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/30">
-            <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-sensora-teal-50 border border-sensora-teal-200">
+            <svg className="w-5 h-5 text-sensora-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -752,18 +752,18 @@ export default function ResultPage() {
                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
               />
             </svg>
-            <span className="text-green-400 text-sm">IFRA 51st Amendment Compliant</span>
+            <span className="text-sensora-teal-700 text-sm font-medium">IFRA 51st Amendment Compliant</span>
           </div>
         </motion.div>
       </div>
 
       {/* Footer */}
-      <footer className="mt-16 py-8 border-t border-aether-purple/30">
+      <footer className="mt-16 py-8 border-t border-sensora-teal-100">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
-          <p className="text-aether-cream/40">
+          <p className="text-sensora-text-muted">
             L'Oreal Brandstorm 2026 Innovation Challenge
           </p>
-          <p className="text-aether-cream/40">
+          <p className="text-sensora-text-muted">
             Powered by Physio-RAG AI Technology
           </p>
         </div>

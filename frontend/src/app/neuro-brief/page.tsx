@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-// Mood quadrant visualization
+// Mood quadrant visualization - light theme
 function MoodQuadrant({
   valence,
   arousal,
@@ -40,60 +40,72 @@ function MoodQuadrant({
     return 'Neutral / Balanced'
   }
 
+  const getMoodColor = () => {
+    if (valence > 0.15 && arousal > 0.15) return '#FBBF24' // gold - excited
+    if (valence > 0.15 && arousal < -0.15) return '#10B981' // teal - calm
+    if (valence < -0.15 && arousal > 0.15) return '#F43F5E' // rose - tense
+    if (valence < -0.15 && arousal < -0.15) return '#6366F1' // indigo - melancholic
+    return '#6B7280' // gray - neutral
+  }
+
   return (
     <div className="space-y-4">
       <div
-        className="relative w-full aspect-square rounded-2xl bg-aether-void/50 border border-aether-purple/30 cursor-crosshair overflow-hidden"
+        className="relative w-full aspect-square rounded-2xl bg-white border-2 border-sensora-gray-100 cursor-crosshair overflow-hidden shadow-soft"
         onClick={handleClick}
       >
         {/* Grid lines */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-full h-px bg-aether-purple/30" />
+          <div className="w-full h-px bg-sensora-gray-200" />
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-full w-px bg-aether-purple/30" />
+          <div className="h-full w-px bg-sensora-gray-200" />
         </div>
 
         {/* Quadrant labels */}
-        <div className="absolute top-3 left-3 text-xs text-aether-cream/30">Tense</div>
-        <div className="absolute top-3 right-3 text-xs text-aether-cream/30">Excited</div>
-        <div className="absolute bottom-3 left-3 text-xs text-aether-cream/30">Sad</div>
-        <div className="absolute bottom-3 right-3 text-xs text-aether-cream/30">Calm</div>
+        <div className="absolute top-3 left-3 text-xs text-sensora-text-muted font-medium">Tense</div>
+        <div className="absolute top-3 right-3 text-xs text-sensora-text-muted font-medium">Excited</div>
+        <div className="absolute bottom-3 left-3 text-xs text-sensora-text-muted font-medium">Sad</div>
+        <div className="absolute bottom-3 right-3 text-xs text-sensora-text-muted font-medium">Calm</div>
 
         {/* Axis labels */}
-        <div className="absolute top-1/2 left-2 -translate-y-1/2 text-xs text-aether-gold/50 -rotate-90">
+        <div className="absolute top-1/2 left-2 -translate-y-1/2 text-xs text-sensora-teal-500 font-medium -rotate-90 origin-center">
           Arousal
         </div>
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-aether-gold/50">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-sensora-teal-500 font-medium">
           Valence
         </div>
 
         {/* Color gradient background */}
         <div
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0 opacity-30"
           style={{
             background: `
-              radial-gradient(circle at 75% 25%, rgba(201, 169, 98, 0.4) 0%, transparent 50%),
-              radial-gradient(circle at 25% 25%, rgba(139, 115, 64, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 75% 75%, rgba(201, 169, 98, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 25% 75%, rgba(74, 44, 106, 0.4) 0%, transparent 50%)
+              radial-gradient(circle at 75% 25%, rgba(251, 191, 36, 0.4) 0%, transparent 40%),
+              radial-gradient(circle at 25% 25%, rgba(244, 63, 94, 0.3) 0%, transparent 40%),
+              radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.4) 0%, transparent 40%),
+              radial-gradient(circle at 25% 75%, rgba(99, 102, 241, 0.3) 0%, transparent 40%)
             `,
           }}
         />
 
         {/* Position indicator */}
         <motion.div
-          className="absolute w-6 h-6 -translate-x-1/2 -translate-y-1/2"
+          className="absolute w-8 h-8 -translate-x-1/2 -translate-y-1/2"
           style={{ left: `${xPos}%`, top: `${yPos}%` }}
           animate={{ left: `${xPos}%`, top: `${yPos}%` }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
           <motion.div
-            className="absolute inset-0 rounded-full bg-aether-gold/30 blur-md"
+            className="absolute inset-0 rounded-full blur-md"
+            style={{ backgroundColor: `${getMoodColor()}40` }}
             animate={{ scale: [1, 1.5, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
-          <div className="absolute inset-0 rounded-full bg-aether-gold border-2 border-aether-gold-light" />
+          <div
+            className="absolute inset-0 rounded-full border-3 border-white shadow-lg"
+            style={{ backgroundColor: getMoodColor() }}
+          />
         </motion.div>
       </div>
 
@@ -104,27 +116,35 @@ function MoodQuadrant({
         initial={{ opacity: 0, y: -5 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <span className="text-aether-gold font-medium">{getMoodLabel()}</span>
+        <span
+          className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold"
+          style={{
+            backgroundColor: `${getMoodColor()}15`,
+            color: getMoodColor()
+          }}
+        >
+          {getMoodLabel()}
+        </span>
       </motion.div>
     </div>
   )
 }
 
-// EEG visualization placeholder
+// EEG visualization placeholder - light theme
 function EEGPlaceholder() {
   return (
-    <div className="relative p-6 rounded-xl bg-aether-void/50 border border-aether-purple/30">
+    <div className="relative p-6 rounded-2xl bg-white border border-sensora-gray-100 shadow-soft">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-3 h-3 rounded-full bg-aether-purple animate-pulse" />
-        <span className="text-aether-cream/50 text-sm">EEG Device Not Connected</span>
+        <div className="w-3 h-3 rounded-full bg-sensora-gray-300 animate-pulse" />
+        <span className="text-sensora-text-soft text-sm">EEG Device Not Connected</span>
       </div>
 
       {/* Simulated waveform */}
-      <div className="h-24 relative overflow-hidden">
-        <svg className="w-full h-full" viewBox="0 0 400 100" preserveAspectRatio="none">
+      <div className="h-20 relative overflow-hidden rounded-xl bg-sensora-gray-50">
+        <svg className="w-full h-full" viewBox="0 0 400 80" preserveAspectRatio="none">
           <motion.path
-            d="M0 50 Q25 30 50 50 T100 50 T150 50 T200 50 T250 50 T300 50 T350 50 T400 50"
-            stroke="rgba(201, 169, 98, 0.3)"
+            d="M0 40 Q25 25 50 40 T100 40 T150 40 T200 40 T250 40 T300 40 T350 40 T400 40"
+            stroke="rgba(16, 185, 129, 0.3)"
             strokeWidth="2"
             fill="none"
             initial={{ pathLength: 0 }}
@@ -133,13 +153,13 @@ function EEGPlaceholder() {
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <p className="text-aether-cream/30 text-sm">
+          <p className="text-sensora-text-muted text-sm">
             Connect Muse headband for neural input
           </p>
         </div>
       </div>
 
-      <button className="mt-4 w-full py-2 rounded-lg border border-aether-purple/50 text-aether-cream/50 text-sm hover:border-aether-gold/50 hover:text-aether-gold transition-colors">
+      <button className="mt-4 w-full py-2.5 rounded-xl border-2 border-sensora-gray-200 text-sensora-text-soft text-sm font-medium hover:border-sensora-teal-300 hover:text-sensora-teal-600 transition-colors">
         Connect EEG Device
       </button>
     </div>
@@ -160,7 +180,7 @@ function ProgressSteps({ currentStep }: { currentStep: number }) {
   const steps = ['Bio-Calibration', 'Scent Brief', 'Your Formula']
 
   return (
-    <div className="flex items-center justify-center gap-4 mb-12">
+    <div className="flex items-center justify-center gap-4 mb-8">
       {steps.map((step, index) => (
         <div key={step} className="flex items-center">
           <motion.div
@@ -182,7 +202,7 @@ function ProgressSteps({ currentStep }: { currentStep: number }) {
           {index < steps.length - 1 && (
             <div
               className={`w-16 md:w-24 h-0.5 mx-2 transition-colors duration-500 ${
-                index < currentStep ? 'bg-aether-gold' : 'bg-aether-purple/50'
+                index < currentStep ? 'bg-sensora-teal-500' : 'bg-sensora-gray-200'
               }`}
             />
           )}
@@ -232,65 +252,65 @@ export default function NeuroBriefPage() {
 
   return (
     <div className="min-h-screen py-8 px-6">
+      {/* Decorative background elements */}
+      <div className="wellness-blob w-80 h-80 -top-40 -right-40 opacity-40" />
+      <div className="wellness-blob w-64 h-64 bottom-20 -left-32 opacity-30" style={{ animationDelay: '3s' }} />
+
       {/* Header */}
       <motion.nav
-        className="max-w-4xl mx-auto flex items-center justify-between mb-8"
+        className="max-w-5xl mx-auto flex items-center justify-between mb-8"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Link href="/" className="font-display text-xl text-gold-gradient">
+        <Link href="/" className="font-display text-xl text-teal-gradient">
           SENSORA
         </Link>
-        <Link href="/calibration" className="text-aether-cream/50 hover:text-aether-gold transition-colors text-sm">
+        <Link href="/calibration" className="text-sensora-text-soft hover:text-sensora-teal-600 transition-colors text-sm font-medium">
           Back
         </Link>
       </motion.nav>
 
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         {/* Progress */}
         <ProgressSteps currentStep={1} />
 
-        <div className="grid md:grid-cols-2 gap-8">
+        {/* Header */}
+        <motion.div
+          className="text-center mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <span className="badge-teal mb-3 inline-block">Step 2 of 3</span>
+          <h1 className="font-display text-3xl md:text-4xl text-sensora-text mb-2">
+            Describe Your Vision
+          </h1>
+          <p className="text-sensora-text-soft max-w-md mx-auto">
+            Paint a picture with words. Be poetic, be specific.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-6">
           {/* Left: Text prompt */}
           <motion.div
-            className="glass-card p-8"
+            className="wellness-card p-6"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="mb-6">
-              <motion.p
-                className="text-aether-gold uppercase tracking-[0.2em] text-sm mb-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                Step 2 of 3
-              </motion.p>
-              <motion.h1
-                className="font-display text-2xl md:text-3xl text-aether-cream mb-2"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                Describe Your Vision
-              </motion.h1>
-              <motion.p
-                className="text-aether-cream/60 text-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                Paint a picture with words. Be poetic, be specific.
-              </motion.p>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sensora-teal-100 to-sensora-teal-50 flex items-center justify-center">
+                <svg className="w-5 h-5 text-sensora-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sensora-text font-semibold">Your Scent Story</h3>
+                <p className="text-sensora-text-soft text-sm">Describe your perfect fragrance</p>
+              </div>
             </div>
 
             {/* Text input */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
+            <div>
               <textarea
                 value={prompt}
                 onChange={(e) => {
@@ -298,14 +318,16 @@ export default function NeuroBriefPage() {
                   setShowSuggestions(false)
                 }}
                 placeholder="Describe your perfect scent..."
-                className="input-aether h-40 resize-none"
+                className="input-sensora h-40 resize-none"
                 maxLength={500}
               />
-              <div className="flex justify-between mt-2 text-xs text-aether-cream/40">
+              <div className="flex justify-between mt-2 text-xs text-sensora-text-muted">
                 <span>{prompt.length}/500 characters</span>
-                <span>{prompt.length < 10 ? 'Minimum 10 characters' : 'Ready'}</span>
+                <span className={prompt.length >= 10 ? 'text-sensora-teal-600' : ''}>
+                  {prompt.length < 10 ? 'Minimum 10 characters' : 'Ready'}
+                </span>
               </div>
-            </motion.div>
+            </div>
 
             {/* Suggestions */}
             <AnimatePresence>
@@ -316,21 +338,21 @@ export default function NeuroBriefPage() {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                 >
-                  <p className="text-aether-cream/50 text-sm mb-3">Need inspiration?</p>
+                  <p className="text-sensora-text-soft text-sm mb-3 font-medium">Need inspiration?</p>
                   <div className="space-y-2">
                     {suggestedPrompts.map((suggestion, i) => (
                       <motion.button
                         key={i}
-                        className="block w-full text-left p-3 rounded-lg bg-aether-void/30 border border-aether-purple/20 text-aether-cream/60 text-sm hover:border-aether-gold/30 hover:text-aether-cream transition-all"
+                        className="block w-full text-left p-3 rounded-xl bg-sensora-gray-50 border border-transparent text-sensora-text-soft text-sm hover:border-sensora-teal-200 hover:bg-sensora-teal-50 hover:text-sensora-text transition-all"
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.6 + i * 0.1 }}
+                        transition={{ delay: 0.3 + i * 0.05 }}
                         onClick={() => {
                           setPrompt(suggestion)
                           setShowSuggestions(false)
                         }}
                       >
-                        "{suggestion}"
+                        &ldquo;{suggestion}&rdquo;
                       </motion.button>
                     ))}
                   </div>
@@ -347,11 +369,18 @@ export default function NeuroBriefPage() {
             transition={{ delay: 0.3 }}
           >
             {/* Mood quadrant */}
-            <div className="glass-card p-6">
-              <h3 className="text-aether-cream font-medium mb-4">Emotional Tone</h3>
-              <p className="text-aether-cream/50 text-sm mb-4">
-                Click to position your desired emotional atmosphere
-              </p>
+            <div className="wellness-card p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sensora-gold-100 to-sensora-gold-50 flex items-center justify-center">
+                  <svg className="w-5 h-5 text-sensora-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-sensora-text font-semibold">Emotional Tone</h3>
+                  <p className="text-sensora-text-soft text-sm">Click to position your mood</p>
+                </div>
+              </div>
               <MoodQuadrant
                 valence={valence}
                 arousal={arousal}
@@ -372,19 +401,19 @@ export default function NeuroBriefPage() {
           className="mt-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
+          transition={{ delay: 0.5 }}
         >
           <button
             onClick={handleSubmit}
             disabled={!canProceed || isSubmitting}
-            className={`w-full btn-glow ${
+            className={`w-full btn-primary py-5 text-lg ${
               !canProceed || isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center gap-3">
                 <motion.span
-                  className="w-5 h-5 border-2 border-aether-void/30 border-t-aether-void rounded-full"
+                  className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 />
@@ -394,6 +423,11 @@ export default function NeuroBriefPage() {
               'Create My Fragrance'
             )}
           </button>
+          {!canProceed && (
+            <p className="text-center text-sensora-text-muted text-sm mt-3">
+              Describe your ideal scent to continue (minimum 10 characters)
+            </p>
+          )}
         </motion.div>
       </div>
     </div>
